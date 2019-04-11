@@ -19,5 +19,4 @@ public interface PersonRepository extends JpaRepository<Person, Long> {
 
     List<Person> findByAgeBetween(Integer from, Integer to);
 
-
 }

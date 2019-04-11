@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-//@RequestMapping(value = "/persons")
+@RequestMapping(value = "/persons")
 public class PersonRestController {
 
     private final PersonRepository repository;
@@ -16,29 +16,59 @@ public class PersonRestController {
     @Autowired
     public PersonRestController(PersonRepository repository) {
         this.repository = repository;
-        repository.save(new Person("Jim", 30));
-        repository.save(new Person("John", 35));
-//        data.sql :
-//        INSERT INTO PERSON (ID , NAME , AGE) VALUES
-//                (3, 'Vasya', 20),
-//                (4, 'Petya', 25);
-
     }
 
-    @GetMapping("/persons")
+    //http://localhost:8080/persons/
+    @GetMapping()
     List<Person> findAll(){
         return repository.findAll();
     }
 
-    @PostMapping("/persons")
-    Person save(@RequestBody String name, Integer age){
-        Person person = new Person(name, age);
+    //http://localhost:8080/persons/save/Petro&20
+    @GetMapping("/save/{req}")
+    Person save(@PathVariable String req){
+        String[] params = req.split("&");
+        Person person = new Person(params[0], Integer.valueOf(params[1]));
         return repository.save(person);
     }
 
-    @GetMapping("/persons/{id}")
+    //http://localhost:8080/persons/1001
+    @GetMapping("/{id}")
     Person findById(@PathVariable Long id){
         return repository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
+//not working:
+    //http://localhost:8080/persons/findByNameIgnoreCase/jiM
+    @GetMapping("/findByNameIgnoreCase/{name}")
+    List<Person> findByNameIgnoreCase(@PathVariable String name){
+        return repository.findByNameIgnoreCase(name);
+    }
+
+    //http://localhost:8080/persons/findByNameAndAge/Vasya&20
+    @GetMapping("/findByNameAndAge/{req}")
+    List<Person> findByNameAndAge(@PathVariable String req){
+        String[] params = req.split("&");
+        return repository.findByNameAndAge(params[0], Integer.valueOf(params[1]));
+    }
+//not working:
+    //http://localhost:8080/persons/findByAgeOrderByName/20
+    @GetMapping("/findByNameIgnoreCase/{age}")
+    List<Person> findByAgeOrderByName(@PathVariable Integer age){
+        return repository.findByAgeOrderByName(age);
+    }
+
+    //http://localhost:8080/persons/findByNameLike/ya
+    @GetMapping("/findByNameLike/{name}")
+    List<Person> findByNameLike(@PathVariable String name){
+        return repository.findByNameLike("%"+name+"%");
+    }
+
+    //http://localhost:8080/persons/findByAgeBetween/20&30
+    @GetMapping("/findByAgeBetween/{req}")
+    List<Person> findByAgeBetween(@PathVariable String req){
+        String[] params = req.split("&");
+        return repository.findByAgeBetween(Integer.valueOf(params[0]), Integer.valueOf(params[1]));
+    }
+
 
 }
