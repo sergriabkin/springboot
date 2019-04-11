@@ -1,13 +1,15 @@
 package com.company.springboot.entity;
 
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@ToString
+@NoArgsConstructor
 public class Person {
-
-    public Person() {
-    }
 
     public Person(String name, Integer age) {
         this.name = name;
@@ -51,12 +53,4 @@ public class Person {
         this.age = age;
     }
 
-    @Override
-    public String toString() {
-        return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                '}';
-    }
 }
