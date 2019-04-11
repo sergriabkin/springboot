@@ -16,16 +16,19 @@ public class PersonRestController {
     @Autowired
     public PersonRestController(PersonRepository repository) {
         this.repository = repository;
+        repository.save(new Person("Jim", 30));
+        repository.save(new Person("John", 35));
+//        data.sql :
+//        INSERT INTO PERSON (ID , NAME , AGE) VALUES
+//                (3, 'Vasya', 20),
+//                (4, 'Petya', 25);
+
     }
 
     @GetMapping("/persons")
     List<Person> findAll(){
         return repository.findAll();
     }
-
-//    @PostMapping("/persons")
-//    Person person(@RequestBody Person newPerson) {
-//        return repository.save(newPerson);
 
     @PostMapping("/persons")
     Person save(@RequestBody String name, Integer age){

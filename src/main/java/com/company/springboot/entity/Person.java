@@ -1,15 +1,18 @@
 package com.company.springboot.entity;
 
-import lombok.Getter;
+import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@Getter
+@Data
 @Entity
 public class Person {
+
+    public Person() {
+    }
 
     public Person(String name, Integer age) {
         this.name = name;
