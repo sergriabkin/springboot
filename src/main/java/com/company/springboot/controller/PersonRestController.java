@@ -1,7 +1,9 @@
 package com.company.springboot.controller;
 
 import com.company.springboot.entity.Person;
+import com.company.springboot.entity.Phone;
 import com.company.springboot.repository.PersonRepository;
+import com.company.springboot.repository.PhoneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +14,12 @@ import java.util.List;
 public class PersonRestController {
 
     private final PersonRepository repository;
+    private final PhoneRepository phoneRepository;
 
     @Autowired
-    public PersonRestController(PersonRepository repository) {
+    public PersonRestController(PersonRepository repository, PhoneRepository phoneRepository) {
         this.repository = repository;
+        this.phoneRepository = phoneRepository;
     }
 
     //http://localhost:8080/persons/
@@ -70,5 +74,16 @@ public class PersonRestController {
         return repository.findByAgeBetween(Integer.valueOf(params[0]), Integer.valueOf(params[1]));
     }
 
+    //http://localhost:8080/persons/phones
+    @GetMapping("/phones")
+    List<Phone> findAllPhones(){
+        return phoneRepository.findAll();
+    }
+
+    //http://localhost:8080/persons/phones/Vasya
+    @GetMapping("/phones/{name}")
+    List<Phone> findAllPhones(@PathVariable String name){
+        return phoneRepository.findAllByPersonNameOrderByNumber(name);
+    }
 
 }

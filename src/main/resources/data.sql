@@ -1,7 +1,15 @@
-       INSERT INTO PERSON (ID , NAME , AGE) VALUES
+       INSERT INTO PERSON (ID , NAME , AGE, ) VALUES
               (1001, 'Vasya', 20),
               (1002, 'Petya', 20),
               (1003, 'Stas', 35),
               (1004, 'Ivan', 35),
               (1005, 'Jim', 30),
               (1006, 'Jack', 30);
+
+       INSERT INTO PHONES (ID , NUMBER , PERSON_ID ) VALUES
+              (1111, '0958664778', 1001),
+              (1112, '0938654332', 1001),
+              (1113, '0953334773', 1002),
+              (1114, '0951164718', 1005),
+              (1115, '0958664755', 1005),
+              (1116, '0979999988', 1006);
