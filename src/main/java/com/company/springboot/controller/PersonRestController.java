@@ -28,11 +28,9 @@ public class PersonRestController {
         return repository.findAll();
     }
 
-    //http://localhost:8080/persons/save/Petro&20
-    @GetMapping("/save/{req}")
-    Person save(@PathVariable String req){
-        String[] params = req.split("&");
-        Person person = new Person(params[0], Integer.valueOf(params[1]));
+    @PostMapping("/save")
+    Person save(@RequestParam String name, @RequestParam Integer age){
+        Person person = new Person(name, age);
         return repository.save(person);
     }
 
