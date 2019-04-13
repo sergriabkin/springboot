@@ -22,65 +22,67 @@ public class PersonRestController {
         this.phoneRepository = phoneRepository;
     }
 
-    //http://localhost:8080/persons/
     @GetMapping()
-    List<Person> findAll(){
+    List<Person> getPeople() {
         return repository.findAll();
     }
 
     @PostMapping("/save")
-    Person save(@RequestParam String name, @RequestParam Integer age){
+    Person savePerson(@RequestParam String name, @RequestParam Integer age) {
         Person person = new Person(name, age);
         return repository.save(person);
     }
 
-    //http://localhost:8080/persons/1001
     @GetMapping("/{id}")
-    Person findById(@PathVariable Long id){
+    Person getParson(@PathVariable Long id) {
         return repository.findById(id).orElseThrow(IllegalArgumentException::new);
     }
-//not working:
-    //http://localhost:8080/persons/findByNameIgnoreCase/jiM
+
+    @PutMapping("/update")
+    Person updatePerson(@RequestParam Long id, @RequestParam String name, @RequestParam Integer age) {
+        repository.deleteById(id);
+        return repository.save(new Person(name, age));
+    }
+
+    @DeleteMapping("/delete")
+    void deletePerson(@RequestParam Long id) {
+        repository.deleteById(id);
+    }
+
     @GetMapping("/findByNameIgnoreCase/{name}")
-    List<Person> findByNameIgnoreCase(@PathVariable String name){
+    List<Person> findByNameIgnoreCase(@PathVariable String name) {
         return repository.findByNameIgnoreCase(name);
     }
 
-    //http://localhost:8080/persons/findByNameAndAge/Vasya&20
     @GetMapping("/findByNameAndAge/{req}")
-    List<Person> findByNameAndAge(@PathVariable String req){
+    List<Person> findByNameAndAge(@PathVariable String req) {
         String[] params = req.split("&");
         return repository.findByNameAndAge(params[0], Integer.valueOf(params[1]));
     }
-//not working:
-    //http://localhost:8080/persons/findByAgeOrderByName/20
-    @GetMapping("/findByNameIgnoreCase/{age}")
-    List<Person> findByAgeOrderByName(@PathVariable Integer age){
+
+    @GetMapping("/findByAgeOrderByName/{age}")
+    List<Person> findByAgeOrderByName(@PathVariable Integer age) {
         return repository.findByAgeOrderByName(age);
     }
 
-    //http://localhost:8080/persons/findByNameLike/ya
     @GetMapping("/findByNameLike/{name}")
-    List<Person> findByNameLike(@PathVariable String name){
-        return repository.findByNameLike("%"+name+"%");
+    List<Person> findByNameLike(@PathVariable String name) {
+        return repository.findByNameLike("%" + name + "%");
     }
 
-    //http://localhost:8080/persons/findByAgeBetween/20&30
     @GetMapping("/findByAgeBetween/{req}")
-    List<Person> findByAgeBetween(@PathVariable String req){
+    List<Person> findByAgeBetween(@PathVariable String req) {
         String[] params = req.split("&");
         return repository.findByAgeBetween(Integer.valueOf(params[0]), Integer.valueOf(params[1]));
     }
 
-    //http://localhost:8080/persons/phones
     @GetMapping("/phones")
-    List<Phone> findAllPhones(){
+    List<Phone> findAllPhones() {
         return phoneRepository.findAll();
     }
 
-    //http://localhost:8080/persons/phones/Vasya
     @GetMapping("/phones/{name}")
-    List<Phone> findAllPhones(@PathVariable String name){
+    List<Phone> findAllPhones(@PathVariable String name) {
         return phoneRepository.findAllByPersonNameOrderByNumber(name);
     }
 
