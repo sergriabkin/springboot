@@ -36,5 +36,11 @@ public class Person {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")
     private List<Meal> meals;
 
+    public Integer getAge() {
+        return age;
+    }
 
+    public List<Meal> getMeals() {
+        return meals;
+    }
 }

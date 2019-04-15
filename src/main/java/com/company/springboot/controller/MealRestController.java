@@ -1,60 +1,62 @@
 package com.company.springboot.controller;
 
 import com.company.springboot.entity.Meal;
-import com.company.springboot.entity.Person;
-import com.company.springboot.repository.MealRepository;
-import com.company.springboot.repository.PersonRepository;
+import com.company.springboot.service.MealService;
+import com.company.springboot.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/meals")
 public class MealRestController {
 
-    private final MealRepository repository;
-    private final PersonRepository personRepository;
+    private final MealService service;
 
     @Autowired
-    public MealRestController(MealRepository repository, PersonRepository personRepository) {
-        this.repository = repository;
-        this.personRepository = personRepository;
+    public MealRestController(MealService service) {
+        this.service = service;
     }
 
     @GetMapping
     List<Meal> getAll() {
-        return repository.findAll();
+        return service.getAll();
     }
 
     @PostMapping("/save")
     Meal save(@RequestParam String description, @RequestParam Integer calories, @RequestParam Long userId) {
-        Person person = personRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-        Meal meal = new Meal(LocalDateTime.now(), description, calories, person);
-        return repository.save(meal);
+        return service.save(description, calories, userId);
     }
 
     @GetMapping("/{id}")
     Meal getMeal(@PathVariable Long id) {
-        return repository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return service.getMeal(id);
     }
-
 
     @PutMapping("/update")
     Meal updateMeal(@RequestParam Long id, @RequestParam String description,
-                        @RequestParam Integer calories, @RequestParam Long userId) {
-        repository.deleteById(id);
-        Person person = personRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
-        Meal meal = new Meal(LocalDateTime.now(), description, calories, person);
-        return repository.save(meal);
+                    @RequestParam Integer calories, @RequestParam Long userId) {
+        return service.updateMeal(id, description, calories, userId);
     }
 
     @DeleteMapping("/delete")
     void deleteMeal(@RequestParam Long id) {
-        repository.deleteById(id);
+        service.deleteMeal(id);
     }
 
+    @PostMapping("/findAllByDate")
+    List<Meal> findAllByDateTimeBetween(@RequestParam String date,
+                                        @RequestParam Long userId) {
+        LocalDate localDate = Util.parseLocalDate(date);
+        return service.findAllByDate(localDate, userId);
+    }
+
+    @PostMapping("/calculateExcess")
+    String getMessageWithExcess(@RequestParam String date, @RequestParam Long userId) {
+        return service.getMessageWithExcess(date, userId);
+    }
 
 
 }
