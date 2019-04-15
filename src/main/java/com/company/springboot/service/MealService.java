@@ -2,6 +2,7 @@ package com.company.springboot.service;
 
 import com.company.springboot.entity.Meal;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface MealService {
@@ -15,5 +16,9 @@ public interface MealService {
     Meal updateMeal(Long id, String description, Integer calories, Long userId);
 
     void deleteMeal(Long id);
+
+    List<Meal> findAllByDate(LocalDate localDate, Long userId);
+
+    String getMessageWithExcess(String date, Long userId);
 
 }

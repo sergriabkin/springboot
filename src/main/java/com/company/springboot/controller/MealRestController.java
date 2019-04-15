@@ -2,9 +2,11 @@ package com.company.springboot.controller;
 
 import com.company.springboot.entity.Meal;
 import com.company.springboot.service.MealService;
+import com.company.springboot.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -43,5 +45,18 @@ public class MealRestController {
     void deleteMeal(@RequestParam Long id) {
         service.deleteMeal(id);
     }
+
+    @PostMapping("/findAllByDate")
+    List<Meal> findAllByDateTimeBetween(@RequestParam String date,
+                                        @RequestParam Long userId) {
+        LocalDate localDate = Util.parseLocalDate(date);
+        return service.findAllByDate(localDate, userId);
+    }
+
+    @PostMapping("/calculateExcess")
+    String getMessageWithExcess(@RequestParam String date, @RequestParam Long userId) {
+        return service.getMessageWithExcess(date, userId);
+    }
+
 
 }

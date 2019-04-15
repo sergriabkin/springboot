@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Entity
@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @Table(name = "MEALS")
 public class Meal {
 
-    public Meal(LocalDateTime dateTime, String description, Integer calories, Person person) {
-        this.dateTime = dateTime;
+    public Meal(LocalDate date, String description, Integer calories, Person person) {
+        this.date = date;
         this.description = description;
         this.calories = calories;
         this.person = person;
@@ -27,7 +27,7 @@ public class Meal {
     private Long id;
 
     @Column(name = "DATE")
-    private LocalDateTime dateTime;
+    private LocalDate date;
 
     @Column
     private String description;
@@ -38,5 +38,13 @@ public class Meal {
     @ManyToOne
     @JoinColumn(name = "PERSON_ID")
     private Person person;
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public Integer getCalories() {
+        return calories;
+    }
 
 }
