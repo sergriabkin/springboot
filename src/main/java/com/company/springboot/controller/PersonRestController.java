@@ -2,8 +2,7 @@ package com.company.springboot.controller;
 
 import com.company.springboot.entity.Person;
 import com.company.springboot.entity.Phone;
-import com.company.springboot.repository.PersonRepository;
-import com.company.springboot.repository.PhoneRepository;
+import com.company.springboot.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,77 +12,71 @@ import java.util.List;
 @RequestMapping(value = "/persons")
 public class PersonRestController {
 
-    private final PersonRepository repository;
-    private final PhoneRepository phoneRepository;
+    private final PersonService service;
 
     @Autowired
-    public PersonRestController(PersonRepository repository, PhoneRepository phoneRepository) {
-        this.repository = repository;
-        this.phoneRepository = phoneRepository;
+    public PersonRestController(PersonService personService) {
+        this.service = personService;
     }
 
     @GetMapping()
     List<Person> getPeople() {
-        return repository.findAll();
+        return service.getPeople();
     }
 
     @PostMapping("/save")
     Person savePerson(@RequestParam String name, @RequestParam Integer age) {
-        Person person = new Person(name, age);
-        return repository.save(person);
+        return service.savePerson(name, age);
     }
 
     @GetMapping("/{id}")
     Person getParson(@PathVariable Long id) {
-        return repository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return service.getParson(id);
     }
 
     @PutMapping("/update")
     Person updatePerson(@RequestParam Long id, @RequestParam String name, @RequestParam Integer age) {
-        repository.deleteById(id);
-        return repository.save(new Person(name, age));
+        return service.updatePerson(id, name, age);
     }
 
     @DeleteMapping("/delete")
     void deletePerson(@RequestParam Long id) {
-        repository.deleteById(id);
+        service.deletePerson(id);
     }
 
     @GetMapping("/findByNameIgnoreCase/{name}")
     List<Person> findByNameIgnoreCase(@PathVariable String name) {
-        return repository.findByNameIgnoreCase(name);
+        return service.findByNameIgnoreCase(name);
     }
 
     @GetMapping("/findByNameAndAge/{req}")
     List<Person> findByNameAndAge(@PathVariable String req) {
-        String[] params = req.split("&");
-        return repository.findByNameAndAge(params[0], Integer.valueOf(params[1]));
+        return service.findByNameAndAge(req);
     }
 
     @GetMapping("/findByAgeOrderByName/{age}")
     List<Person> findByAgeOrderByName(@PathVariable Integer age) {
-        return repository.findByAgeOrderByName(age);
+        return service.findByAgeOrderByName(age);
     }
 
     @GetMapping("/findByNameLike/{name}")
     List<Person> findByNameLike(@PathVariable String name) {
-        return repository.findByNameLike("%" + name + "%");
+        return service.findByNameLike(name);
     }
 
     @GetMapping("/findByAgeBetween/{req}")
     List<Person> findByAgeBetween(@PathVariable String req) {
-        String[] params = req.split("&");
-        return repository.findByAgeBetween(Integer.valueOf(params[0]), Integer.valueOf(params[1]));
+        return service.findByAgeBetween(req);
     }
 
     @GetMapping("/phones")
     List<Phone> findAllPhones() {
-        return phoneRepository.findAll();
+        return service.findAllPhones();
     }
 
     @GetMapping("/phones/{name}")
     List<Phone> findAllPhones(@PathVariable String name) {
-        return phoneRepository.findAllByPersonNameOrderByNumber(name);
+        return service.findAllPhones(name);
     }
 
 }
