@@ -31,4 +31,10 @@ public class Person {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")
     private List<Phone> phones;
 
+
+    @JsonIgnore
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "person")
+    private List<Meal> meals;
+
+
 }
