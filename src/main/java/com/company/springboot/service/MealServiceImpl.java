@@ -1,7 +1,9 @@
 package com.company.springboot.service;
 
+import com.company.springboot.entity.Dish;
 import com.company.springboot.entity.Meal;
 import com.company.springboot.entity.Person;
+import com.company.springboot.repository.DishRepository;
 import com.company.springboot.repository.MealRepository;
 import com.company.springboot.repository.PersonRepository;
 import com.company.springboot.util.Util;
@@ -9,19 +11,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class MealServiceImpl implements MealService {
 
     private final MealRepository repository;
     private final PersonRepository personRepository;
+    private final DishRepository dishRepository;
 
     @Autowired
-    public MealServiceImpl(MealRepository repository, PersonRepository personRepository) {
+    public MealServiceImpl(MealRepository repository, PersonRepository personRepository, DishRepository dishRepository) {
         this.repository = repository;
         this.personRepository = personRepository;
+        this.dishRepository = dishRepository;
     }
 
     @Override
@@ -76,6 +83,43 @@ public class MealServiceImpl implements MealService {
                 "This day you get "+result+" calories more than needed" :
                 "it`s ok, you can even get " + Math.abs(result) + " calories more";
 
+    }
+
+    @Override
+    public List<Dish> findAllDishes(){
+        return dishRepository.findAll();
+    }
+
+    @Override
+    public Meal createMealFromDishes(String dishes, Long userId){
+        List<Dish> dishList = Stream.of(dishes.split("\\s"))
+                .filter(s -> s.matches("[0-9]++"))
+                .mapToLong(Long::valueOf)
+                .mapToObj(this::findDishById)
+                .collect(Collectors.toList());
+
+        Person person = personRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+
+        StringBuilder description = new StringBuilder();
+        int calories = 0;
+        for (Dish dish: dishList
+             ) {
+            description.append(dish.getName()).append(" ");
+            calories += dish.getCalories();
+        }
+        Meal meal = new Meal(LocalDate.now(), description.toString().trim(), calories, person);
+        return repository.save(meal);
+    }
+
+    @Override
+    public Dish findDishById(Long id) {
+        return dishRepository.findById(id).orElseThrow(IllegalArgumentException::new);
+    }
+
+    @Override
+    public Dish saveDish(String name, Integer calories) {
+        Dish dish = new Dish(name, calories);
+        return dishRepository.save(dish);
     }
 
 

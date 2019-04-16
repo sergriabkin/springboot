@@ -1,5 +1,6 @@
 package com.company.springboot.controller;
 
+import com.company.springboot.entity.Dish;
 import com.company.springboot.entity.Meal;
 import com.company.springboot.service.MealService;
 import com.company.springboot.util.Util;
@@ -56,6 +57,26 @@ public class MealRestController {
     @PostMapping("/calculateExcess")
     String getMessageWithExcess(@RequestParam String date, @RequestParam Long userId) {
         return service.getMessageWithExcess(date, userId);
+    }
+
+    @GetMapping("/dishes")
+    List<Dish> findAllDishes() {
+        return service.findAllDishes();
+    }
+
+    @GetMapping("/dishes/{id}")
+    Dish findDishById(@PathVariable Long id) {
+        return service.findDishById(id);
+    }
+
+    @PostMapping("dishes/save")
+    Dish saveDish(@RequestParam String name, @RequestParam Integer calories){
+        return service.saveDish(name, calories);
+    }
+
+    @PostMapping("/createMealFromDishesId")
+    Meal createMealFromDishesId(@RequestParam String dishes, @RequestParam Long userId) {
+        return service.createMealFromDishes(dishes, userId);
     }
 
 

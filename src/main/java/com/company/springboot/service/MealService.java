@@ -1,5 +1,6 @@
 package com.company.springboot.service;
 
+import com.company.springboot.entity.Dish;
 import com.company.springboot.entity.Meal;
 
 import java.time.LocalDate;
@@ -21,4 +22,11 @@ public interface MealService {
 
     String getMessageWithExcess(String date, Long userId);
 
+    List<Dish> findAllDishes();
+
+    Meal createMealFromDishes(String dishes, Long userId);
+
+    Dish findDishById(Long id);
+
+    Dish saveDish(String name, Integer calories);
 }
