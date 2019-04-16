@@ -15,6 +15,9 @@ import java.time.LocalDate;
 @Table(name = "MEALS")
 public class Meal {
 
+//    public Meal(String description, Integer calories, Person person) {
+//        this(LocalDate.now(), description, calories, person);
+//    }
     public Meal(LocalDate date, String description, Integer calories, Person person) {
         this.date = date;
         this.description = description;

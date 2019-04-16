@@ -1,7 +1,7 @@
 package com.company.springboot.controller;
 
 import com.company.springboot.entity.Person;
-import com.company.springboot.repository.PersonRepository;
+import com.company.springboot.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,16 +14,16 @@ import java.util.Map;
 @Controller
 public class PersonController {
 
-    private PersonRepository personRepository;
+    private final PersonService service;
 
     @Autowired
-    public PersonController(PersonRepository personRepository) {
-        this.personRepository = personRepository;
+    public PersonController(PersonService service) {
+        this.service = service;
     }
 
     @GetMapping("/personsform")
     public String persons(Map<String, Object> model) {
-        List<Person> persons = personRepository.findAll();
+        List<Person> persons = service.getPeople();
 
         model.put("persons", persons);
 
@@ -32,11 +32,10 @@ public class PersonController {
 
     @PostMapping("/personsform")
     public String add(@RequestParam String name, @RequestParam Integer age, Map<String, Object> model) {
-        Person person = new Person(name, age);
 
-        personRepository.save(person);
+        service.savePerson(name, age);
 
-        List<Person> persons = personRepository.findAll();
+        List<Person> persons = service.getPeople();
 
         model.put("persons", persons);
 
@@ -48,9 +47,9 @@ public class PersonController {
         List<Person> persons;
 
         if (personsfilter != null && !personsfilter.isEmpty()) {
-            persons = personRepository.findByNameIgnoreCase(personsfilter);
+            persons = service.findByNameIgnoreCase(personsfilter);
         } else {
-            persons = personRepository.findAll();
+            persons = service.getPeople();
         }
 
         model.put("persons", persons);
