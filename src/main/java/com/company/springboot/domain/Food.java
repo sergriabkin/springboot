@@ -3,24 +3,24 @@ package com.company.springboot.domain;
 import javax.persistence.*;
 
 @Entity
-public class Message {
+public class Food {
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    private String text;
+    private Integer calories;
     private String tag;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User author;
 
-    public Message() {
+    public Food() {
     }
 
-    public Message(String text, String tag, User user) {
+    public Food(Integer calories, String tag, User user) {
         this.author = user;
-        this.text = text;
+        this.calories = calories;
         this.tag = tag;
     }
 
@@ -36,12 +36,12 @@ public class Message {
         this.author = author;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public Integer getCalories() {
+        return calories;
     }
 
-    public String getText() {
-        return text;
+    public void setCalories(Integer calories) {
+        this.calories = calories;
     }
 
     public Integer getId() {

@@ -1,8 +1,8 @@
 package com.company.springboot.controller;
 
-import com.company.springboot.domain.Message;
+import com.company.springboot.domain.Food;
 import com.company.springboot.domain.User;
-import com.company.springboot.repository.MessageRepo;
+import com.company.springboot.repository.FoodRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,7 +15,7 @@ import java.util.Map;
 @Controller
 public class MainController {
     @Autowired
-    private MessageRepo messageRepo;
+    private FoodRepo foodRepo;
 
     @GetMapping("/")
     public String greeting(Map<String, Object> model) {
@@ -24,7 +24,7 @@ public class MainController {
 
     @GetMapping("/main")
     public String main(Map<String, Object> model) {
-        Iterable<Message> messages = messageRepo.findAll();
+        Iterable<Food> messages = foodRepo.findAll();
 
         model.put("messages", messages);
 
@@ -34,14 +34,14 @@ public class MainController {
     @PostMapping("/main")
     public String add(
             @AuthenticationPrincipal User user,
-            @RequestParam String text,
+            @RequestParam Integer calories,
             @RequestParam String tag, Map<String, Object> model
     ) {
-        Message message = new Message(text, tag, user);
+        Food food = new Food(calories, tag, user);
 
-        messageRepo.save(message);
+        foodRepo.save(food);
 
-        Iterable<Message> messages = messageRepo.findAll();
+        Iterable<Food> messages = foodRepo.findAll();
 
         model.put("messages", messages);
 
@@ -50,12 +50,12 @@ public class MainController {
 
     @PostMapping("filter")
     public String filter(@RequestParam String filter, Map<String, Object> model) {
-        Iterable<Message> messages;
+        Iterable<Food> messages;
 
         if (filter != null && !filter.isEmpty()) {
-            messages = messageRepo.findByTag(filter);
+            messages = foodRepo.findByTag(filter);
         } else {
-            messages = messageRepo.findAll();
+            messages = foodRepo.findAll();
         }
 
         model.put("messages", messages);
